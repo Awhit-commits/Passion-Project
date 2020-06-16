@@ -3,12 +3,18 @@ var router = express.Router();
 const UserCollection = require("../models/UserSchema");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const secretKey = require("../config/keys").secretKey;
 
 router.use(express.json());
 /* GET users listing. */
-// router.get("/", function (req, res, next) {
-//   res.send("respond with a resource");
-// });
+router.get("/", function (req, res, next) {
+  // res.send("respond with a resource");
+  UserCollection.find({},(errors,results)=>{
+    errors?res.send(errors):res.send(results)
+  })
+    
+  
+});
 
 // Registering user for the app
 router.post("/register", (req, res) => {
@@ -23,7 +29,7 @@ router.post("/register", (req, res) => {
         name: req.body.name,
         email: req.body.email,
         password: req.body.password,
-        role: req.body.role,
+        username:req.body.username
       });
       // encrypt password
       bcryptjs.genSalt(10, (error, salt) => {
