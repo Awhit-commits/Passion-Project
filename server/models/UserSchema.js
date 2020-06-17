@@ -7,6 +7,8 @@ let UserSchema = new Schema({
   password: { required: true, type: String },
   email: { required: true, type: String },
   date: { type: Date, default: Date.now },
+  fortniteFriends:[{type:mongoose.Schema.Types.ObjectId,ref:"passionFriends"}],
+  apexFriends:[{type:mongoose.Schema.Types.ObjectId,ref:"passionFriends"}]
 });
 
 module.exports = mongoose.model("passionUser", UserSchema);

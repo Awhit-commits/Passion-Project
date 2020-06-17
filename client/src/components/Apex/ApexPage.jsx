@@ -7,7 +7,7 @@ class apexPage extends Component {
         this.state = {
           username: "",
           platform: "",
-          players:{players:{global:{name:""}}}
+          players:{global:{name:""}}
         };
       }
       handleChange = (event) => {
@@ -55,7 +55,7 @@ class apexPage extends Component {
           </fieldset>
         </form>
         <div>
-        {/* <p>{this.state.players.global.name}</p> */}
+        <p>{this.state.players.global.name}</p>
         </div>
       </div>
     );

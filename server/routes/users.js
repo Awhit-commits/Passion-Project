@@ -5,7 +5,7 @@ const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const secretKey = require("../config/keys").secretKey;
 
-router.use(express.json());
+// router.use(express.json());
 /* GET users listing. */
 router.get("/", function (req, res, next) {
   // res.send("respond with a resource");

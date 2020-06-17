@@ -7,7 +7,7 @@ export default class FortnitePage extends Component {
     this.state = {
       username: "",
       platform: "",
-      players:{}
+      players:{global_stats:{duo:{},solo:{},sqaud:{}}}
     };
   }
   handleChange = (event) => {
@@ -16,17 +16,19 @@ export default class FortnitePage extends Component {
   handleSubmission = async (event) => {
     event.preventDefault();
     console.log(this.state);
-    let response = await fetch(
-      `https://api.fortnitetracker.com/v1/profile/${this.state.platform}/${this.state.username}`,
-      {
-        headers: {
-          "TRN-Api-Key": "c34e46e3-3441-4b17-a71e-85abd1c54b94",
-          "Access-Control-Allow-Origin": "*",
-          "Content-type": "application/json; charset=UTF-8",
-        },
-        
-      }
-    );
+    let response = await fetch(`https://fortnite-api.p.rapidapi.com/stats-alternative/${this.state.username}`, {
+        "method": "GET",
+        "headers": {
+            "x-rapidapi-host": "fortnite-api.p.rapidapi.com",
+            "x-rapidapi-key": "93f6c763eemsh380fea2491e5c03p19eb58jsn907193954f9d"
+        }
+    })
+    // .then(response => {
+    //     console.log(response);
+    // })
+    // .catch(err => {
+    //     console.log(err);
+    // });
     let json = await response.json();
     console.table(json);
     this.setState({players:json})
@@ -63,6 +65,9 @@ export default class FortnitePage extends Component {
           </fieldset>
         </form>
         <div>
+            <p>Name: {this.state.players.name}</p>
+           <p>First Place in Duo game mode:{this.state.players.global_stats.duo.placetop1}</p> 
+           
           
         </div>
       </div>

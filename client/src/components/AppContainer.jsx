@@ -21,7 +21,7 @@ export default class AppContainer extends Component {
         <div className="homepageContainer">
           <Link to = "/fortnite"><div className ="fortnite"><p>Fortnite</p></div></Link>
           <Link to = "/apex"><p className= "apex">Apex Legends</p></Link>
-          <Link to ="/rainbow/leaderboard">Rainbow Six Seige</Link>
+          {/* <Link to ="/rainbow/leaderboard">Rainbow Six Seige</Link> */}
 
             
         </div>
