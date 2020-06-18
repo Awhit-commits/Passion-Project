@@ -7,7 +7,8 @@ export default class FortnitePage extends Component {
     this.state = {
       username: "",
       platform: "",
-      players:{global_stats:{duo:{},solo:{},sqaud:{}}}
+      players:{global_stats:{duo:{},solo:{},sqaud:{}}},
+      level:""
     };
   }
   handleChange = (event) => {
@@ -16,6 +17,7 @@ export default class FortnitePage extends Component {
   handleSubmission = async (event) => {
     event.preventDefault();
     console.log(this.state);
+    //Retrieveing fortnite api data
     let response = await fetch(`https://fortnite-api.p.rapidapi.com/stats-alternative/${this.state.username}`, {
         "method": "GET",
         "headers": {
@@ -33,6 +35,20 @@ export default class FortnitePage extends Component {
     console.table(json);
     this.setState({players:json})
   };
+  saveFriend = async (event)=>{
+      event.preventDefault();
+      let friend = {
+          gamerTag:this.state.username,
+
+      }
+      let response = await fetch('/users/fortnite/5ee7be4fc5c232847500bfca',{
+          method:"post",
+          headers:{
+              "content-type":"application/json"
+          }
+
+      })
+  }
 
   render() {
     return (
@@ -67,7 +83,8 @@ export default class FortnitePage extends Component {
         <div>
             <p>Name: {this.state.players.name}</p>
            <p>First Place in Duo game mode:{this.state.players.global_stats.duo.placetop1}</p> 
-           
+           <div><button onClick = {this.handleSubmission}>Save!</button></div>
+
           
         </div>
       </div>
