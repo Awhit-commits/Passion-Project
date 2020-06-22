@@ -62,7 +62,7 @@ router.post("/login", (req, res) => {
             id: user._id,
             name: user.name,
             email: user.email,
-            role: user.role,
+            
           };
           jwt.sign(payload, secretKey, { expiresIn: 3600 }, (error, token) => {
             error
@@ -77,5 +77,28 @@ router.post("/login", (req, res) => {
   });
   console.log("User has logged in");
 });
+
+
+// POST: verify user
+router.post("/verify", verifyToken, (req, res) => {
+  jwt.verify(req.token, secretKey, (error, results) => {
+    error
+      ? res.status(500).json({ error: "verificaiton error!!!" })
+      : res.json({ message: results });
+  });
+});
+
+// verify user token
+function verifyToken(req, res, next) {
+  const bearerHeader = req.headers["authorization"];
+  if (bearerHeader) {
+    const bearer = bearerHeader.split(" ");
+    const bearerToken = bearer[1];
+    req.token = bearerToken;
+    next();
+  } else {
+    res.status(403).json({ error: "Fobbiden" });
+  }
+}
 
 module.exports = router;

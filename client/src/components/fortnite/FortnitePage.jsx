@@ -7,8 +7,8 @@ export default class FortnitePage extends Component {
     this.state = {
       username: "",
       platform: "",
-      players:{global_stats:{duo:{},solo:{},sqaud:{}}},
-      level:""
+      players:{account:{level:"",progress_pct:""},global_stats:{duo:{placetop1:""},solo:{},sqaud:{}}},
+      
     };
   }
   handleChange = (event) => {
@@ -34,30 +34,42 @@ export default class FortnitePage extends Component {
     let json = await response.json();
     console.table(json);
     this.setState({players:json})
+    if(this.state.players.global_stats.duo.placetop1 == undefined){
+
+        this.setState({players:{global_stats:{duo:{placetop1:0}}}})
+          
+    }
   };
+  
   saveFriend = async (event)=>{
       event.preventDefault();
       let friend = {
           gamerTag:this.state.username,
+          wins:this.state.players.global_stats.duo.placetop1,
+          level:this.state.players.level
 
       }
-      let response = await fetch('/users/fortnite/5ee7be4fc5c232847500bfca',{
+      let response = await fetch(`/fortnite/${this.props.id}`,{
           method:"post",
           headers:{
               "content-type":"application/json"
-          }
+          },
+          body:JSON.stringify(friend)
 
       })
+      let json =  await response.json();
+      console.log(json);
   }
 
   render() {
+      
     return (
       <div>
           <h1>Fortnite Page</h1>
         <form action="">
           <fieldset>
             <label htmlFor=" Username">
-              <select
+              {/* <select
                 name="platform"
                 id=""
                 onChange={this.handleChange}
@@ -67,7 +79,7 @@ export default class FortnitePage extends Component {
                 <option value="pc">PC</option>
                 <option value="xb1">XBOX</option>
                 <option value="psn">PS4</option>
-              </select>
+              </select> */}
               <input
                 type="text"
                 name="username"
@@ -82,8 +94,9 @@ export default class FortnitePage extends Component {
         </form>
         <div>
             <p>Name: {this.state.players.name}</p>
-           <p>First Place in Duo game mode:{this.state.players.global_stats.duo.placetop1}</p> 
-           <div><button onClick = {this.handleSubmission}>Save!</button></div>
+           {/* <p>First Place in Duo game mode:{this.state.players.global_stats.duo.placetop1}</p>  */}
+           <p>Level:{this.state.players.account.level} </p>
+           <div><button onClick = {this.saveFriend}>Save!</button></div>
 
           
         </div>

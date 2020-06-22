@@ -9,6 +9,7 @@ export default class Register extends Component {
       password: "",
       password_confirm: "",
       email: "",
+      name:""
     };
   }
 
@@ -54,7 +55,7 @@ handleSubmission = async (event)=>{
             </div>
             <div className="control-group">
               {/* <!-- Name --> */}
-              <label className="control-label" htmlFor="username">
+              <label className="control-label" htmlFor="name">
                 Name
               </label>
               <div className="controls">
@@ -65,6 +66,7 @@ handleSubmission = async (event)=>{
                   placeholder=""
                   class="input-xlarge"
                   value={this.state.name}
+                  onChange= {this.handleChange}
                 />
                 <p className="help-block">
                   Please enter your name

@@ -19,7 +19,7 @@ router.post("/fortnite/:_id", async (req, res) => {
       user.fortniteFriends.push(fortniteFriend._id);
       user.save();
       res.send(user)
-    });
+    }).populate("fortniteFriends");
   });
 });
 
@@ -31,7 +31,9 @@ router.get("/profile/:_id", (req, res) => {
 });
 
 router.get("/fortnite/:_id", (req, res) => {
-  res.send(`Fortnite page`);
+  UserCollection.find({},(error,results)=>{
+    error?res.send(error):res.send(results)
+  })
 });
 
 module.exports = router;
