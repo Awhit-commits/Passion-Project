@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
 
 export default class Register extends Component {
   constructor(props) {
@@ -9,7 +10,8 @@ export default class Register extends Component {
       password: "",
       password_confirm: "",
       email: "",
-      name:""
+      name:"",
+      redirect:false
     };
   }
 
@@ -40,12 +42,16 @@ handleSubmission = async (event)=>{
         console.log(this.state);
         let json = await response.json();
         console.log(json);
+        this.setState({redirect:true})
 
 
     }
 }
 
   render() {
+    if(this.state.redirect){
+      return <Redirect to = "/login"/>
+    }
     return (
       <div>
         <form className="form-horizontal" action="" method="">

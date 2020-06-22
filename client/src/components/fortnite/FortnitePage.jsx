@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
 export default class FortnitePage extends Component {
   constructor(props) {
@@ -93,7 +94,7 @@ export default class FortnitePage extends Component {
           </fieldset>
         </form>
         <div>
-            <p>Name: {this.state.players.name}</p>
+            <p>Name: <Link to={`/fortnite/stats/${this.state.username}`}>{this.state.players.name}</Link></p>
            {/* <p>First Place in Duo game mode:{this.state.players.global_stats.duo.placetop1}</p>  */}
            <p>Level:{this.state.players.account.level} </p>
            <div><button onClick = {this.saveFriend}>Save!</button></div>

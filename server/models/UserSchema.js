@@ -8,7 +8,10 @@ let UserSchema = new Schema({
   email: { required: true, type: String },
   date: { type: Date, default: Date.now },
   fortniteFriends:[{type:mongoose.Schema.Types.ObjectId,ref:"passionFriends"}],
-  apexFriends:[{type:mongoose.Schema.Types.ObjectId,ref:"passionFriends"}]
+  apexFriends:[{type:mongoose.Schema.Types.ObjectId,ref:"passionFriends"}],
+  psnName:{type:String},
+  xLiveName:{type:String},
+  steamName:{type:String}
 });
 
 module.exports = mongoose.model("passionUser", UserSchema);

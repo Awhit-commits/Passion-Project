@@ -6,6 +6,7 @@ import Login from "./Login/Login";
 import Register from "./Register/Register";
 import Leaderboard from "./RainbowSix/Leaderboard";
 import MyProfile from "./Profile/MyProfile";
+import StatsPageFortnite from "./fortnite/StatsPageFortnite";
 
 export default class AppContainer extends Component {
   constructor(props) {
@@ -36,6 +37,7 @@ export default class AppContainer extends Component {
         <Router>
           {/* Fortnite Routes */}
           <Route path ="/fortnite" exact component ={(props)=><FortnitePage {...props} id = {this.state.id}/>}></Route>
+          <Route path ="/fortnite/stats/:id" exact component = {(props)=><StatsPageFortnite {...props}/>}></Route>
 
 
           {/* Apex Routes */}
