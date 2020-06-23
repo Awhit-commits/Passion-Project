@@ -8,8 +8,14 @@ export default class FortnitePage extends Component {
     this.state = {
       username: "",
       platform: "",
-      players:{account:{level:"",progress_pct:""},global_stats:{duo:{placetop1:""},solo:{},sqaud:{}}},
-      
+      players: {
+        account: { level: "", progress_pct: "" },
+        global_stats: {
+          duo: { placetop1: "", kills: "" },
+          solo: { placetop1: "", kills: "" },
+          sqaud: { placetop1: "", kills: "" },
+        },
+      },
     };
   }
   handleChange = (event) => {
@@ -19,13 +25,17 @@ export default class FortnitePage extends Component {
     event.preventDefault();
     console.log(this.state);
     //Retrieveing fortnite api data
-    let response = await fetch(`https://fortnite-api.p.rapidapi.com/stats-alternative/${this.state.username}`, {
-        "method": "GET",
-        "headers": {
-            "x-rapidapi-host": "fortnite-api.p.rapidapi.com",
-            "x-rapidapi-key": "93f6c763eemsh380fea2491e5c03p19eb58jsn907193954f9d"
-        }
-    })
+    let response = await fetch(
+      `https://fortnite-api.p.rapidapi.com/stats-alternative/${this.state.username}`,
+      {
+        method: "GET",
+        headers: {
+          "x-rapidapi-host": "fortnite-api.p.rapidapi.com",
+          "x-rapidapi-key":
+            "93f6c763eemsh380fea2491e5c03p19eb58jsn907193954f9d",
+        },
+      }
+    );
     // .then(response => {
     //     console.log(response);
     // })
@@ -34,39 +44,34 @@ export default class FortnitePage extends Component {
     // });
     let json = await response.json();
     console.table(json);
-    this.setState({players:json})
-    if(this.state.players.global_stats.duo.placetop1 == undefined){
-
-        this.setState({players:{global_stats:{duo:{placetop1:0}}}})
-          
+    this.setState({ players: json });
+    if (this.state.players.global_stats.duo.placetop1 == undefined) {
+      this.setState({ players: { global_stats: { duo: { placetop1: 0 } } } });
     }
   };
-  
-  saveFriend = async (event)=>{
-      event.preventDefault();
-      let friend = {
-          gamerTag:this.state.username,
-          wins:this.state.players.global_stats.duo.placetop1,
-          level:this.state.players.level
 
-      }
-      let response = await fetch(`/fortnite/${this.props.id}`,{
-          method:"post",
-          headers:{
-              "content-type":"application/json"
-          },
-          body:JSON.stringify(friend)
-
-      })
-      let json =  await response.json();
-      console.log(json);
-  }
+  saveFriend = async (event) => {
+    event.preventDefault();
+    let friend = {
+      gamerTag: this.state.username,
+      wins: this.state.players.global_stats.duo.placetop1,
+      level: this.state.players.level,
+    };
+    let response = await fetch(`/fortnite/${this.props.id}`, {
+      method: "post",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(friend),
+    });
+    let json = await response.json();
+    console.log(json);
+  };
 
   render() {
-      
     return (
       <div>
-          <h1>Fortnite Page</h1>
+        <h1>Fortnite Page</h1>
         <form action="">
           <fieldset>
             <label htmlFor=" Username">
@@ -94,12 +99,17 @@ export default class FortnitePage extends Component {
           </fieldset>
         </form>
         <div>
-            <p>Name: <Link to={`/fortnite/stats/${this.state.username}`}>{this.state.players.name}</Link></p>
-           {/* <p>First Place in Duo game mode:{this.state.players.global_stats.duo.placetop1}</p>  */}
-           <p>Level:{this.state.players.account.level} </p>
-           <div><button onClick = {this.saveFriend}>Save!</button></div>
-
-          
+          <p>
+            Name:{" "}
+            <Link to={`/fortnite/stats/${this.state.username}`}>
+              {this.state.players.name}
+            </Link>
+          </p>
+          {/* <p>First Place in Duo game mode:{this.state.players.global_stats.duo.placetop1}</p>  */}
+          <p>Level:{this.state.players.account.level} </p>
+          <div>
+            <button onClick={this.saveFriend}>Save!</button>
+          </div>
         </div>
       </div>
     );

@@ -22,11 +22,16 @@ export default class myProfile extends Component {
     render() {
         return (
             <div>
-                <div>
-                
+                <div className = "profileInformation">
+                <p>Name:</p>
+                <p>Email:</p>
+                <p>PSN Name:
+                </p>
+                <p>Steam Name:</p>
+                <p>Xbox Live Name:</p>
                 </div>
                 <div>
-                <FortnitePage id  = {this.props.id}/>
+                {/* <FortnitePage id  = {this.props.id}/> */}
                 </div>
                 <FortniteFriends id = {this.props.id}/>
             </div>
