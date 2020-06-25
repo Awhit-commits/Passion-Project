@@ -108,13 +108,30 @@ export default class fortniteFriends extends Component {
     }
   };
 
-  //Deleting the a friend from the array using the id index and splice method (TODO)
-  removeFriend = (id) => {
-    console.log(id);
-    console.log(this.state.friends.indexOf(id));
-    let index = this.state.friends.indexOf(id);
-    this.state.friends.splice(index,1)
+  //Deleting a friend from the array using the id index and splice method (TODO)
+  removeFriend =async (id) => {
+    this.state.friends.splice(this.state.friends.findIndex((i)=>{
+        return i._id === id;
+    }), 1);
+    console.log(this.state.friends);
+    let fortniteFriends = {
+        fortniteFriends:this.state.friends
+    }
+    let response =  await fetch(`/users/profile/${this.props.id}`,{
+        method:"put",
+        headers:{
+            "content-type":"application/json",
+
+        },
+        body:JSON.stringify(fortniteFriends)
+    })
+    let json = await response.json();
+    console.log(json);
+
+
+
   };
+
 
   render() {
     return (
@@ -139,7 +156,7 @@ export default class fortniteFriends extends Component {
             {" "}
             <button onClick = {this.sortKills}>Sort by Kills</button>
             <button onClick = {this.sortPlay}>Sort by Playtime</button>
-            
+
           </div>
         </div>
       </div>
