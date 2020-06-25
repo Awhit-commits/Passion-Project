@@ -23,6 +23,9 @@ export default class EditProfile extends Component {
       name: json.name,
       email: json.email,
       username: json.username,
+      psnName:json.psnName,
+      xLiveName:json.xLiveName,
+      steamName:json.steamName
     });
   }
 
@@ -56,6 +59,25 @@ export default class EditProfile extends Component {
 
     window.history.back();
   };
+
+  deleteUser = async(event)=>{
+    event.preventDefault()
+    let confirmation  = window.confirm('Would you like to delete the account')
+    if(confirmation){
+      let response = fetch(`users/profile/${this.props.id}`,{
+        method:'delete',
+  
+      })
+      let json = await response.json()
+      console.log(json);
+      window.location ='/'
+
+    }
+    else{
+
+    }
+    
+  }
   render() {
     return (
       <div>
@@ -174,6 +196,9 @@ export default class EditProfile extends Component {
                   onClick={this.handleSubmission}
                 >
                   Update
+                </button>
+                <button className= "btn btn-danger" onClick = {this.deleteUser}>
+                  Delete
                 </button>
               </div>
             </div>

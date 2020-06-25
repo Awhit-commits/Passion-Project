@@ -23,7 +23,19 @@ router.post("/fortnite/:_id", async (req, res) => {
   });
 });
 
-router.delete("fortnite/:_id",(req,res)=>{
+router.get('/fortnite/friends',(req,res)=>{
+  FriendCollection.find({},(errors,results)=>{
+    errors?res.send(errors):res.send(results)
+  })
+})
+
+router.put ('/fortnite/friends/:gamerTag',(req,res)=>{
+  FriendCollection.findOneAndUpdate({gamerTag:req.body.gamerTag},req.body,{new:true},(error,results)=>{
+    errors?res.send(errors):res.send(results)
+  })
+})
+
+router.delete("fortnite/friends/:_id",(req,res)=>{
   FriendCollection.findOneAndDelete({_id:req.params._id},(error,results)=>{
 error?res.send(error):res.send(results)
   })

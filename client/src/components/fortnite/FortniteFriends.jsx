@@ -11,6 +11,9 @@ export default class fortniteFriends extends Component {
       firstSolo: "",
       firstDuo: "",
       firstSquad: "",
+      sortKills: false,
+      sortPlay: false,
+      sortWins:true
     };
   }
   //Lifecycle method to fetch user friends from the database to populate leaderboard
@@ -20,6 +23,7 @@ export default class fortniteFriends extends Component {
     console.log(json);
     this.setState({ friends: json.fortniteFriends });
     console.log(this.state.friends);
+    console.log(this.state);
 
     //function for dynamically sorting through array of objects
     function compareValues(key, order = "asc") {
@@ -43,7 +47,7 @@ export default class fortniteFriends extends Component {
       };
     }
 
-    console.log(this.state.friends.sort(compareValues("wins", "desc")));
+    console.log(this.state.friends.sort(compareValues("firstPlaceSolo", "desc")));
   }
 
   //Use live data instead of stored to to be more accurate when showing info under the friend name (TODO)
@@ -109,31 +113,81 @@ export default class fortniteFriends extends Component {
   };
 
   //Deleting a friend from the array using the id index and splice method (TODO)
-  removeFriend =async (id) => {
-    this.state.friends.splice(this.state.friends.findIndex((i)=>{
+  removeFriend = async (id) => {
+    this.state.friends.splice(
+      this.state.friends.findIndex((i) => {
         return i._id === id;
-    }), 1);
+      }),
+      1
+    );
     console.log(this.state.friends);
     let fortniteFriends = {
-        fortniteFriends:this.state.friends
-    }
-    let response =  await fetch(`/users/profile/${this.props.id}`,{
-        method:"put",
-        headers:{
-            "content-type":"application/json",
-
-        },
-        body:JSON.stringify(fortniteFriends)
-    })
+      fortniteFriends: this.state.friends,
+    };
+    let response = await fetch(`/users/profile/${this.props.id}`, {
+      method: "put",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(fortniteFriends),
+    });
     let json = await response.json();
     console.log(json);
+  };
+  sortKills = () => {
+    this.setState({sortKills:true,sortWins:false,sortPlay:false})
+    function compareValues(key, order = "asc") {
+      return function innerSort(a, b) {
+        if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
+          // property doesn't exist on either object
+          return 0;
+        }
+        //ignoring casing and setting value of key parameter to a string
+        const varA = typeof a[key] === "string" ? a[key].toUpperCase() : a[key];
+        const varB = typeof b[key] === "string" ? b[key].toUpperCase() : b[key];
 
-
-
+        //if a > b, it will descend
+        let comparison = 0;
+        if (varA > varB) {
+          comparison = 1;
+        } else if (varA < varB) {
+          comparison = -1;
+        }
+        return order === "desc" ? comparison * -1 : comparison;
+      };
+    
+    }
+    this.state.friends.sort(compareValues('kills','desc'))
   };
 
-
   render() {
+    if(this.state.sortKills){
+      return <div>
+        <div>
+          <h4>Friend's List</h4>
+          {this.state.friends.map((friends) => {
+            return (
+              <div>
+                {" "}
+                <Link to={`/fortnite/stats/${friends.gamerTag}`}>
+                  <p>{friends.gamerTag}</p>
+                </Link>
+                <p>{friends.killSolo} Solo Kills</p>
+                <button onClick={() => this.removeFriend(friends._id)}>
+                  Remove
+                </button>
+              </div>
+            );
+          })}
+          <div>
+            {" "}
+            <button onClick={this.sortKills}>Sort by Kills</button>
+            <button onClick={this.sortWins}>Sort by Wins</button>
+          </div>
+        </div>
+      </div>
+
+    }
     return (
       <div>
         <div>
@@ -145,7 +199,7 @@ export default class fortniteFriends extends Component {
                 <Link to={`/fortnite/stats/${friends.gamerTag}`}>
                   <p>{friends.gamerTag}</p>
                 </Link>
-                <p>{friends.wins} Solo Wins</p>
+                <p>{friends.firstPlaceSolo} Solo Wins</p>
                 <button onClick={() => this.removeFriend(friends._id)}>
                   Remove
                 </button>
@@ -154,9 +208,8 @@ export default class fortniteFriends extends Component {
           })}
           <div>
             {" "}
-            <button onClick = {this.sortKills}>Sort by Kills</button>
-            <button onClick = {this.sortPlay}>Sort by Playtime</button>
-
+            <button onClick={this.sortKills}>Sort by Kills</button>
+            <button onClick={this.sortPlay}>Sort by Playtime</button>
           </div>
         </div>
       </div>

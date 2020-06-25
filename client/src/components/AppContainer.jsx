@@ -16,7 +16,8 @@ export default class AppContainer extends Component {
   
     this.state = {
        id:"",
-       token:""
+       token:"",
+       friends:[]
     }
   }
   getToken = async(token)=>{
@@ -32,6 +33,35 @@ export default class AppContainer extends Component {
     console.log(json);
     this.setState({id:json.message.id})
   }
+  //load the fortnite friends collection
+  async componentDidMount(){
+    let response = await fetch('/fortnite/friends');
+    let json = await response.json()
+
+    console.log(json);
+    this.setState({friends:json})
+    this.updateFriends()
+  }
+
+  updateFriends = async()=>{
+ this.state.friends.map( async (friends)=>{
+      
+      // let response = await fetch(
+      //   `https://fortnite-api.p.rapidapi.com/stats-alternative/${friends.gamerTag}`,
+      //   {
+      //     method: "GET",
+      //     headers: {
+      //       "x-rapidapi-host": "fortnite-api.p.rapidapi.com",
+      //       "x-rapidapi-key":
+      //         "93f6c763eemsh380fea2491e5c03p19eb58jsn907193954f9d",
+      //     },
+      //   }
+      // );
+      // let json = response.json()
+      // console.log(json);
+    })
+  }
+
   
   render() {
     let login,register

@@ -1,13 +1,30 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
+
+
+
 export default class NavBar extends Component {
+    logOut = (event)=>{
+        window.location='/'
+    }
     render() {
         if(this.props.token){
             return(<div>
                 <nav className ="navbar navbar-dark bg-dark navbar-expand-lg">
                 <Link to="/" className=" navbar-brand">Get An Edge</Link>
-                <div className ="collapse navbar-collapse">
+                <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+                <div className ="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <ul className="navbar-nav mr-auto">
                        
                         <li className="navbar-item">
@@ -27,6 +44,7 @@ export default class NavBar extends Component {
                             <Link to='/Register' className="nav-link">Register</Link>
 
                         </li>
+                        <li className = "navbar-item"><Link onClick={this.logOut} className = "nav-link">Logout</Link></li>
 
                     </ul>
                 </div>
@@ -40,7 +58,18 @@ export default class NavBar extends Component {
             <div>
                 <nav className ="navbar navbar-dark bg-dark navbar-expand-lg">
                 <Link to="/" className=" navbar-brand">Get An Edge</Link>
-                <div className ="collapse navbar-collapse">
+                <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+                <div className ="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <ul className="navbar-nav mr-auto">
                        
                         <li className="navbar-item">
