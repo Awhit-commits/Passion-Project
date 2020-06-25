@@ -78,6 +78,38 @@ router.post("/login", (req, res) => {
   console.log("User has logged in");
 });
 
+//Deleting User by Id
+
+router.delete("/profile/:_id",(req,res)=>{
+  UserCollection.findOneAndDelete({_id:req.params._id},(error,results)=>{
+    error? res.send(error):res.send(results);
+  })
+})
+
+//Retrieving specific user by mongo Id
+router.get("/profile/:_id", (req, res) => {
+  // res.send('my profile page is here')
+  UserCollection.findOne({ _id: req.params._id }, (error, results) => {
+    error ? res.send(error) : res.send(results);
+  }).populate("fortniteFriends");
+});
+//Showing all users in database
+router.get("/fortnite/:_id", (req, res) => {
+  UserCollection.find({},(error,results)=>{
+    error?res.send(error):res.send(results)
+  })
+});
+
+
+//Updating users in database
+
+router.put ("/profile/:_id",(req,res)=>{
+  UserCollection.findOneAndUpdate({_id:req.params._id},req.body,{new:true},(error,results)=>{
+    error?res.send(error):res.send(results)
+
+  })
+})
+
 
 // POST: verify user
 router.post("/verify", verifyToken, (req, res) => {

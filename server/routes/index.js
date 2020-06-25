@@ -15,7 +15,7 @@ router.post("/fortnite/:_id", async (req, res) => {
   FriendCollection.create(req.body, (errors, results) => {
     errors ? res.send(errors) : (fortniteFriend = results);
     UserCollection.findOne({ _id: req.params._id }, (errors, results) => {
-      errors ? res.send(errors) : (user = results);
+      errors ? res.send(error) : (user = results);
       user.fortniteFriends.push(fortniteFriend._id);
       user.save();
       res.send(user)
@@ -23,17 +23,12 @@ router.post("/fortnite/:_id", async (req, res) => {
   });
 });
 
-router.get("/profile/:_id", (req, res) => {
-  // res.send('my profile page is here')
-  UserCollection.findOne({ _id: req.params._id }, (error, results) => {
-    error ? res.send(error) : res.send(results);
-  }).populate("fortniteFriends");
-});
-
-router.get("/fortnite/:_id", (req, res) => {
-  UserCollection.find({},(error,results)=>{
-    error?res.send(error):res.send(results)
+router.delete("fortnite/:_id",(req,res)=>{
+  FriendCollection.findOneAndDelete({_id:req.params._id},(error,results)=>{
+error?res.send(error):res.send(results)
   })
-});
+})
+
+
 
 module.exports = router;

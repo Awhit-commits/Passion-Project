@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import FortnitePage from '../fortnite/FortnitePage'
 import FortniteFriends from '../fortnite/FortniteFriends'
+import { Link } from 'react-router-dom'
+
 
 export default class myProfile extends Component {
     constructor(props) {
@@ -13,7 +15,7 @@ export default class myProfile extends Component {
         }
     }
     async componentDidMount(){
-        let response =await  fetch (`/profile/${this.props.id}`)
+        let response =await  fetch (`/users/profile/${this.props.id}`)
         let json = await response.json();
         console.log(json)
         this.setState({user:json})
@@ -23,12 +25,15 @@ export default class myProfile extends Component {
         return (
             <div>
                 <div className = "profileInformation">
-                <p>Name:</p>
-                <p>Email:</p>
-                <p>PSN Name:
+                <p>Name:{this.state.user.name}</p>
+                <p>Email:{this.state.user.email}</p>
+                <p>PSN Name:{this.state.user.psnName}
                 </p>
-                <p>Steam Name:</p>
-                <p>Xbox Live Name:</p>
+                <p>Steam Name:{this.state.user.steamName}</p>
+                <p>Xbox Live Name:{this.state.user.xLiveName}</p>
+                </div>
+                <div>
+                    <Link to ={`/profile/edit/${this.props.id}`}>Edit Profile</Link>
                 </div>
                 <div>
                 {/* <FortnitePage id  = {this.props.id}/> */}

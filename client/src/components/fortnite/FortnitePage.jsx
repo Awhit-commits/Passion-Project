@@ -8,14 +8,13 @@ export default class FortnitePage extends Component {
     this.state = {
       username: "",
       platform: "",
-      players: {
-        account: { level: "", progress_pct: "" },
-        global_stats: {
-          duo: { placetop1: "", kills: "" },
-          solo: { placetop1: "", kills: "" },
-          sqaud: { placetop1: "", kills: "" },
-        },
-      },
+      players: { account: {}, global_stats: {} },
+      firstPlaceDuos: "",
+      firstPlaceSquads: "",
+      firstPlaceSolo: "",
+      killDuo: "",
+      killSquad: "",
+      killSolo: "",
     };
   }
   handleChange = (event) => {
@@ -42,19 +41,68 @@ export default class FortnitePage extends Component {
     // .catch(err => {
     //     console.log(err);
     // });
+
+    //setting response to json format
     let json = await response.json();
     console.table(json);
     this.setState({ players: json });
-    if (this.state.players.global_stats.duo.placetop1 == undefined) {
-      this.setState({ players: { global_stats: { duo: { placetop1: 0 } } } });
+
+    //Error Handling if property doesn't exist
+    if (this.state.players.global_stats.solo == undefined) {
+      this.setState({
+        name: this.state.players.name,
+        firstPlaceSolo: 0,
+        killSolo: 0,
+        firstPlaceDuos: this.state.players.global_stats.duo.placetop1,
+        killDuo: this.state.players.global_stats.duo.kills,
+        killSquad: this.state.players.global_stats.squad.kills,
+        firstPlaceSquads: this.state.players.global_stats.squad.placetop1,
+      });
+    } else if (this.state.players.global_stats.duo == undefined) {
+      this.setState({
+        name: json.name,
+        firstPlaceDuos: 0,
+        killDuo: 0,
+        firstPlaceSquads: json.global_stats.squad.placetop1,
+        firstPlaceSolo: this.state.players.global_stats.solo.placetop1,
+        killSquad: this.state.players.global_stats.squad.kills,
+        killSolo: json.global_stats.solo.kills,
+      });
+    } else if (this.state.players.global_stats.squad == undefined) {
+      this.setState({
+        name: json.name,
+        firstPlaceSquads: 0,
+        killSquad: 0,
+        firstPlaceDuos: this.state.players.global_stats.duo.placetop1,
+        firstPlaceSolo: this.state.players.global_stats.solo.placetop1,
+        killDuo: this.state.players.global_stats.duo.kills,
+        killSolo: json.global_stats.solo.kills,
+      });
+    } else {
+      this.setState({
+        name: json.name,
+        firstPlaceDuos: json.global_stats.duo.placetop1,
+        firstPlaceSquads: json.global_stats.squad.placetop1,
+        firstPlaceSolo: json.global_stats.solo.placetop1,
+        killDuo: json.global_stats.duo.kills,
+        killSquad: json.global_stats.squad.kills,
+        killSolo: json.global_stats.solo.kills,
+      });
     }
   };
 
+
+  //Save Friend function
   saveFriend = async (event) => {
     event.preventDefault();
     let friend = {
       gamerTag: this.state.username,
-      wins: this.state.players.global_stats.duo.placetop1,
+      firstPlaceSolo: this.state.players.global_stats.solo.placetop1,
+      firstPlaceSquads: this.state.players.global_stats.squad.placetop1,
+      firstPlaceDuo: this.state.players.global_stats.duo.placetop1,
+      killSolo: this.state.players.global_stats.solo.kills,
+      killSquad: this.state.players.global_stats.squad.kills,
+      killDuo: this.state.players.global_stats.duo.kills,
       level: this.state.players.level,
     };
     let response = await fetch(`/fortnite/${this.props.id}`, {
