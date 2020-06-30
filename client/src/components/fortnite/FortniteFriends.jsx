@@ -111,7 +111,11 @@ export default class fortniteFriends extends Component {
       });
     }
   };
-
+// componentDidUpdate(prevState){
+//   if(prevState.friends !== this.state.friends){
+//     this.setState({friends:this.state.friends})
+//   }
+// }
   //Deleting a friend from the array using the id index and splice method (TODO)
   removeFriend = async (id) => {
     this.state.friends.splice(
@@ -133,6 +137,9 @@ export default class fortniteFriends extends Component {
     });
     let json = await response.json();
     console.log(json);
+    // this.componentDidUpdate(json)
+    this.componentDidMount()
+    
   };
   sortKills = () => {
     this.setState({sortKills:true,sortWins:false,sortPlay:false})
@@ -160,12 +167,72 @@ export default class fortniteFriends extends Component {
     this.state.friends.sort(compareValues('kills','desc'))
   };
 
+  sortWins = ()=>{
+    this.setState({sortKills:false,sortWins:true,sortPlay:false})
+    function compareValues(key, order = "asc") {
+      return function innerSort(a, b) {
+        if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
+          // property doesn't exist on either object
+          return 0;
+        }
+        //ignoring casing and setting value of key parameter to a string
+        const varA = typeof a[key] === "string" ? a[key].toUpperCase() : a[key];
+        const varB = typeof b[key] === "string" ? b[key].toUpperCase() : b[key];
+
+        //if a > b, it will descend
+        let comparison = 0;
+        if (varA > varB) {
+          comparison = 1;
+        } else if (varA < varB) {
+          comparison = -1;
+        }
+        return order === "desc" ? comparison * -1 : comparison;
+      };
+    
+    }
+    this.state.friends.sort(compareValues('firstPlaceSolo','desc'))
+
+  }
+
+  sortPlay = ()=>{
+    this.setState({sortKills:false,sortWins:true,sortPlay:false})
+    function compareValues(key, order = "asc") {
+      return function innerSort(a, b) {
+        if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
+          // property doesn't exist on either object
+          return 0;
+        }
+        //ignoring casing and setting value of key parameter to a string
+        const varA = typeof a[key] === "string" ? a[key].toUpperCase() : a[key];
+        const varB = typeof b[key] === "string" ? b[key].toUpperCase() : b[key];
+
+        //if a > b, it will descend
+        let comparison = 0;
+        if (varA > varB) {
+          comparison = 1;
+        } else if (varA < varB) {
+          comparison = -1;
+        }
+        return order === "desc" ? comparison * -1 : comparison;
+      };
+    
+    }
+    this.state.friends.sort(compareValues('firstPlaceSolo','desc'))
+
+  }
+
   render() {
     if(this.state.sortKills){
       return <div>
         <div>
           <h4>Friend's List</h4>
           {this.state.friends.map((friends) => {
+            if(this.props.psnName == friends.gamerTag){
+             return <Link to={`/fortnite/stats/${friends.gamerTag}`}>
+             <p>{friends.gamerTag } <b>(you)</b></p>
+           </Link>
+
+            }
             return (
               <div>
                 {" "}
@@ -181,11 +248,46 @@ export default class fortniteFriends extends Component {
           })}
           <div>
             {" "}
-            <button onClick={this.sortKills}>Sort by Kills</button>
+            {/* <button onClick={this.sortKills}>Sort by Kills</button> */}
             <button onClick={this.sortWins}>Sort by Wins</button>
           </div>
         </div>
       </div>
+
+    }
+    else if (this.state.sortWins){
+      return <div>
+      <div>
+        <h4>Friend's List</h4>
+        {this.state.friends.map((friends) => {
+          if(this.props.psnName == friends.gamerTag){
+            return (<Link to={`/fortnite/stats/${friends.gamerTag}`}>
+            <p>{friends.gamerTag } <b>(you)</b></p>
+          </Link>
+          // <div> <p>{friends.firstPlaceSolo} Solo Wins</p></div>)
+
+            )}
+          return (
+            <div>
+              {" "}
+              <Link to={`/fortnite/stats/${friends.gamerTag}`}>
+                <p>{friends.gamerTag}</p>
+              </Link>
+              <p>{friends.firstPlaceSolo} Solo Wins</p>
+              <button onClick={() => this.removeFriend(friends._id)}>
+                Remove
+              </button>
+            </div>
+          );
+        })}
+        <div>
+          {" "}
+          <button onClick={this.sortKills}>Sort by Kills</button>
+          {/* <button onClick={this.sortPlay}>Sort by Playtime</button> */}
+        </div>
+      </div>
+    </div>
+
 
     }
     return (
@@ -193,6 +295,13 @@ export default class fortniteFriends extends Component {
         <div>
           <h4>Friend's List</h4>
           {this.state.friends.map((friends) => {
+            if(this.props.psnName == friends.gamerTag){
+              return (<Link to={`/fortnite/stats/${friends.gamerTag}`}>
+              <p>{friends.gamerTag } <b>(you)</b></p>
+            </Link>
+            //  <p>{friends.firstPlaceSolo} Solo Wins</p>)
+ 
+              )}
             return (
               <div>
                 {" "}
@@ -209,7 +318,7 @@ export default class fortniteFriends extends Component {
           <div>
             {" "}
             <button onClick={this.sortKills}>Sort by Kills</button>
-            <button onClick={this.sortPlay}>Sort by Playtime</button>
+            {/* <button onClick={this.sortPlay}>Sort by Playtime</button> */}
           </div>
         </div>
       </div>

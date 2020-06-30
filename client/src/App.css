@@ -32,18 +32,55 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
 }
-.homepageContainer{
+
+.homepageContainer {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
   gap: 1px 1px;
-  grid-template-areas: ". apex . ." ". fortnite  ." ". . . .";
+  grid-template-areas: ". apex . ."". fortnite  ."". . . .";
 }
 
-.apex { grid-area: apex; }
+.apex {
+  grid-area: apex;
+}
 
-.fortnite { grid-area: fortnite; }
+.profileInformation{
+  padding: 5em;
+}
+
+.profileContainer{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.fortniteFriends{
+  grid-column: 2;
+  grid-row: 1;
+  padding: 5em;
+}
+
+.welcomeText{
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.welcomeButton{
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  color: yellow;
+  border-radius: 50%;
+  background-color: transparent;
+  outline: none;
+  
+}

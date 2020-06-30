@@ -11,7 +11,7 @@ router.get("/", function (req, res, next) {
   // res.send("respond with a resource");
   UserCollection.find({},(errors,results)=>{
     errors?res.send(errors):res.send(results)
-  })
+  }).populate('fortniteFriends')
     
   
 });

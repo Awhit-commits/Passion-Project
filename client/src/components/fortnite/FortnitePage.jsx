@@ -15,6 +15,10 @@ export default class FortnitePage extends Component {
       killDuo: "",
       killSquad: "",
       killSolo: "",
+      minutesSolo:"",
+      minutesDuo:"",
+      minutesSquad:"",
+      invalidAccount:false
     };
   }
   handleChange = (event) => {
@@ -45,9 +49,21 @@ export default class FortnitePage extends Component {
     //setting response to json format
     let json = await response.json();
     console.table(json);
-    this.setState({ players: json });
+    if(json.error){
+      this.setState({invalidAccount:true})
+    }
+    else{
+      this.setState({players:json})
+      this.setState({invalidAccount:false})
+    
+    
+   
 
     //Error Handling if property doesn't exist
+
+    if (this.state.players.account == undefined){
+      this.setState({players:{account:{level:0}}})
+    }
     if (this.state.players.global_stats.solo == undefined) {
       this.setState({
         name: this.state.players.name,
@@ -57,6 +73,8 @@ export default class FortnitePage extends Component {
         killDuo: this.state.players.global_stats.duo.kills,
         killSquad: this.state.players.global_stats.squad.kills,
         firstPlaceSquads: this.state.players.global_stats.squad.placetop1,
+        minutesSolo:0,
+        minutesDuo:this.state.players.global_stats.duo.minutesplayed
       });
     } else if (this.state.players.global_stats.duo == undefined) {
       this.setState({
@@ -88,7 +106,8 @@ export default class FortnitePage extends Component {
         killSquad: json.global_stats.squad.kills,
         killSolo: json.global_stats.solo.kills,
       });
-    }
+    }}
+    console.log(this.state);
   };
 
 
@@ -117,6 +136,101 @@ export default class FortnitePage extends Component {
   };
 
   render() {
+    if(this.state.invalidAccount){
+      return (
+        <div>
+        <h1>Fortnite Page</h1>
+        <form action="">
+          <fieldset>
+            <label htmlFor=" Username">
+              {/* <select
+                name="platform"
+                id=""
+                onChange={this.handleChange}
+                value={this.state.platform}
+              >
+                <option value="">Please Select a platform</option>
+                <option value="pc">PC</option>
+                <option value="xb1">XBOX</option>
+                <option value="psn">PS4</option>
+              </select> */}
+              <input
+                type="text"
+                name="username"
+                id=""
+                value={this.state.username}
+                placeholder="Username"
+                onChange={this.handleChange}
+              />
+              <button onClick={this.handleSubmission}>Search</button>
+              <div>
+                <small className = "text-danger">Person doesn't exist</small>
+              </div>
+            </label>
+          </fieldset>
+        </form>
+        <div>
+          <p>
+            Name:{" "}
+            Invalid Username
+          </p>
+          {/* <p>First Place in Duo game mode:{this.state.players.global_stats.duo.placetop1}</p>  */}
+          <p>Level:0 </p>
+          <div>
+            {/* <button onClick={this.saveFriend}>Save!</button> */}
+          </div>
+        </div>
+      </div>
+      )
+    }
+    else if (this.props.token){
+      return (
+        <div>
+        <h1>Fortnite Page</h1>
+        <form action="">
+          <fieldset>
+            <label htmlFor=" Username">
+              {/* <select
+                name="platform"
+                id=""
+                onChange={this.handleChange}
+                value={this.state.platform}
+              >
+                <option value="">Please Select a platform</option>
+                <option value="pc">PC</option>
+                <option value="xb1">XBOX</option>
+                <option value="psn">PS4</option>
+              </select> */}
+              <input
+                type="text"
+                name="username"
+                id=""
+                value={this.state.username}
+                placeholder="Username"
+                onChange={this.handleChange}
+              />
+              <button onClick={this.handleSubmission}>Search</button>
+            </label>
+          </fieldset>
+        </form>
+        <div>
+          <p>
+            Name:{" "}
+            <Link to={`/fortnite/stats/${this.state.username}`}>
+              {this.state.players.name}
+            </Link>
+          </p>
+          {/* <p>First Place in Duo game mode:{this.state.players.global_stats.duo.placetop1}</p>  */}
+          <p>Level:{this.state.players.account.level} </p>
+          <div>
+            <button onClick={this.saveFriend}>Save!</button>
+          </div>
+        </div>
+      </div>
+      )
+
+
+    }
     return (
       <div>
         <h1>Fortnite Page</h1>
@@ -156,7 +270,7 @@ export default class FortnitePage extends Component {
           {/* <p>First Place in Duo game mode:{this.state.players.global_stats.duo.placetop1}</p>  */}
           <p>Level:{this.state.players.account.level} </p>
           <div>
-            <button onClick={this.saveFriend}>Save!</button>
+            {/* <button onClick={this.saveFriend}>Save!</button> */}
           </div>
         </div>
       </div>

@@ -23,7 +23,7 @@ export default class myProfile extends Component {
     
     render() {
         return (
-            <div>
+            <div className = "profileContainer">
                 <div className = "profileInformation">
                 <p>Name:{this.state.user.name}</p>
                 <p>Email:{this.state.user.email}</p>
@@ -35,10 +35,10 @@ export default class myProfile extends Component {
                 <div>
                     <Link to ={`/profile/edit/${this.props.id}`}>Edit Profile</Link>
                 </div>
-                <div>
-                {/* <FortnitePage id  = {this.props.id}/> */}
+                <div className = "fortniteFriends">
+                <FortniteFriends xLiveName = {this.state.user.xLiveName} steamName = {this.state.user.steamName} psnName = {this.state.user.psnName} id = {this.props.id}/>
                 </div>
-                <FortniteFriends id = {this.props.id}/>
+                {/* <FortniteFriends xLiveName = {this.state.user.xLiveName} steamName = {this.state.user.steamName} psnName = {this.state.user.psnName} id = {this.props.id}/> */}
             </div>
         )
     }

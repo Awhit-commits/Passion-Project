@@ -40,27 +40,27 @@ export default class AppContainer extends Component {
 
     console.log(json);
     this.setState({friends:json})
-    this.updateFriends()
+    // this.updateFriends()
   }
 
-  updateFriends = async()=>{
- this.state.friends.map( async (friends)=>{
+//   updateFriends = async()=>{
+//  this.state.friends.map( async (friends)=>{
       
-      // let response = await fetch(
-      //   `https://fortnite-api.p.rapidapi.com/stats-alternative/${friends.gamerTag}`,
-      //   {
-      //     method: "GET",
-      //     headers: {
-      //       "x-rapidapi-host": "fortnite-api.p.rapidapi.com",
-      //       "x-rapidapi-key":
-      //         "93f6c763eemsh380fea2491e5c03p19eb58jsn907193954f9d",
-      //     },
-      //   }
-      // );
-      // let json = response.json()
-      // console.log(json);
-    })
-  }
+//       let response = await fetch(
+//         `https://fortnite-api.p.rapidapi.com/stats-alternative/${friends.gamerTag}`,
+//         {
+//           method: "GET",
+//           headers: {
+//             "x-rapidapi-host": "fortnite-api.p.rapidapi.com",
+//             "x-rapidapi-key":
+//               "93f6c763eemsh380fea2491e5c03p19eb58jsn907193954f9d",
+//           },
+//         }
+//       );
+//       let json =  await response.json()
+//       console.log(json);
+//     })
+//   }
 
   
   render() {
@@ -74,7 +74,7 @@ export default class AppContainer extends Component {
         <Router>
           <NavBar id = {this.state.id} token = {this.state.token}/>
           {/* Fortnite Routes */}
-          <Route path ="/fortnite" exact component ={(props)=><FortnitePage {...props} id = {this.state.id}/>}></Route>
+          <Route path ="/fortnite" exact component ={(props)=><FortnitePage {...props} token = {this.state.token} id = {this.state.id}/>}></Route>
           <Route path ="/fortnite/stats/:id" exact component = {(props)=><StatsPageFortnite {...props}/>}></Route>
 
 
@@ -95,6 +95,66 @@ export default class AppContainer extends Component {
           <Route path = "/profile/:id" exact component = {(props)=><MyProfile {...props} id = {this.state.id}/>}></Route>
 
           <Route path = "/profile/edit/:id" exact component = {(props)=><EditProfile {...props} id = {this.state.id}/>}></Route>
+          <div className="container">
+            <div>
+           <Link to = "/fortnite"><div className ="column"><div className="row"><img src="" alt=""/><p className="fortnite">Fortnite</p></div></div></Link></div>
+
+           <div className="column">
+           <form action="">
+          <div className="control-group">
+            {/* <!-- E-mail --> */}
+            <label className="control-label" htmlFor="email">
+              E-mail
+            </label>
+            <div className="controls">
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder=""
+                class="input-xlarge"
+                value={this.state.email}
+                onChange={this.handleChange}
+              />
+            </div>
+          </div>
+
+          <div className="control-group">
+            {/* <!-- Password--> */}
+            <label className="control-label" htmlFor="password">
+              Password
+            </label>
+            <div className="controls">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder=""
+                class="input-xlarge"
+                value={this.state.password}
+                onChange={this.handleChange}
+              />
+            </div>
+          </div>
+          <div className="control-group">
+            {/* <!-- Button --> */}
+            <div className="controls">
+              <button
+                className="btn btn-success"
+                onClick={this.handleSubmission}
+              >
+                Login
+              </button>
+            </div>
+          </div>
+        </form>
+           </div>
+
+
+
+          
+
+          </div>
          
         {/* <div className="homepageContainer">
           <Link to = "/fortnite"><div className ="fortnite"><p>Fortnite</p></div></Link>
