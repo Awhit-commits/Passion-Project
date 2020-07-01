@@ -25,6 +25,7 @@ export default class myProfile extends Component {
         return (
             <div className = "profileContainer">
                 <div className = "profileInformation">
+                 <h4>My Information</h4>   
                 <p>Name:{this.state.user.name}</p>
                 <p>Email:{this.state.user.email}</p>
                 <p>PSN Name:{this.state.user.psnName}

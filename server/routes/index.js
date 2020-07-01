@@ -10,36 +10,68 @@ router.get("/", function (req, res, next) {
 });
 
 //Creating a saved friend from fortnite page and relating it to the logged in user
-router.post("/fortnite/:_id", async (req, res) => {
-  let user = req.params._id;
-  if (user) {
-    UserCollection.findOne(
-      { _id: req.params._id },
-      req.body,
-      (error, results) => {
-        error
-          ? res.send(error)
-          : results.fortniteFriends.map((friends) => {
-              if (req.body.gamerTag == friends.gamerTag) {
-                res.json({ message: "User is already a friend" });
-                console.log(`User is already a friend`)
-              }
+router.post("/fortnite/:_id",  (req, res) => {
+  UserCollection.findOne({ _id: req.params._id }, (error, results) => {
+    error
+      ? res.send(error)
+      : results.fortniteFriends.find((friend) => {
+        // console.log(friend)
+          if (req.body.gamerTag === friend.gamerTag) {
+            console.log(`User exist`)
+            return res.send({message:"User already exist"})
+          }
+          else{
+console.log(`Else is going`)
+            FriendCollection.create(req.body, (errors, results) => {
+              errors ? res.send(errors) : (fortniteFriend = results);
+              UserCollection.findOne({ _id: req.params._id }, (errors, results) => {
+                errors ? res.send(error) : (user = results);
+                user.fortniteFriends.push(fortniteFriend._id);
+                user.save();
+                res.send(user);
+              });
             });
-      }
-    );
-  } else {
-    let fortniteFriend, user;
 
-    FriendCollection.create(req.body, (errors, results) => {
-      errors ? res.send(errors) : (fortniteFriend = results);
-      UserCollection.findOne({ _id: req.params._id }, (errors, results) => {
-        errors ? res.send(error) : (user = results);
-        user.fortniteFriends.push(fortniteFriend._id);
-        user.save();
-        res.send(user);
-      }).populate("fortniteFriends");
-    });
-  }
+          }
+        });
+  }).populate('fortniteFriends');
+
+  // : results.fortniteFriends.map((friends) => {
+  //    console.log(friends.gamerTag);
+  //     if (req.body.gamerTag === friends.gamerTag) {
+  //       return res.json({ error: "User is already a friend" });
+  //       console.log(`User is already a friend`);
+
+  //          else {
+  //           let fortniteFriend, user;
+
+  //           FriendCollection.create(req.body, (errors, results) => {
+  //             errors ? res.send(errors) : (fortniteFriend = results);
+  //             UserCollection.findOne(
+  //               { _id: req.params._id },
+  //               (errors, results) => {
+  //                 errors ? res.send(error) : (user = results);
+  //                 user.fortniteFriends.push(fortniteFriend._id);
+  //                 user.save();
+  //                 res.send(user);
+  //               }
+  //             );
+  //           });
+  //         }
+  //       });
+  // }).populate("fortniteFriends");
+
+  // let fortniteFriend, user;
+
+  // FriendCollection.create(req.body, (errors, results) => {
+  //   errors ? res.send(errors) : (fortniteFriend = results);
+  //   UserCollection.findOne({ _id: req.params._id }, (errors, results) => {
+  //     errors ? res.send(error) : (user = results);
+  //     user.fortniteFriends.push(fortniteFriend._id);
+  //     user.save();
+  //     res.send(user);
+  //   }).populate("fortniteFriends");
+  // });
 });
 
 router.get("/fortnite/friends", (req, res) => {
