@@ -84,3 +84,23 @@
   outline: none;
   
 }
+
+.fortnitePage{
+  padding: 2em;
+}
+
+#searchBar{
+ position: absolute;
+ top: 50%;
+ left: 25%;
+ text-align: center;
+ width: 50%;
+
+  
+}
+
+.loginPage{
+  position: absolute;
+  top: 50%;
+  left: 45%;
+}

@@ -128,7 +128,16 @@ export default class FortnitePage extends Component {
       headers: {
         "content-type": "application/json",
       },
-      body: JSON.stringify(friend),
+      body: JSON.stringify( {
+        gamerTag: this.state.username,
+        firstPlaceSolo: this.state.players.global_stats.solo.placetop1,
+        firstPlaceSquads: this.state.players.global_stats.squad.placetop1,
+        firstPlaceDuo: this.state.players.global_stats.duo.placetop1,
+        killSolo: this.state.players.global_stats.solo.kills,
+        killSquad: this.state.players.global_stats.squad.kills,
+        killDuo: this.state.players.global_stats.duo.kills,
+        level: this.state.players.level,
+      }),
     });
     let json = await response.json();
     console.log(json);
@@ -137,12 +146,13 @@ export default class FortnitePage extends Component {
   render() {
     if (this.state.invalidAccount) {
       return (
-        <div>
-          <h1>Fortnite Page</h1>
-          <form action="">
-            <fieldset>
-              <label htmlFor=" Username">
-                {/* <select
+        <div className="fortnitePage">
+          <div>
+            <h1>Fortnite Page</h1>
+            <form action="">
+              <fieldset>
+                <label htmlFor=" Username">
+                  {/* <select
                 name="platform"
                 id=""
                 onChange={this.handleChange}
@@ -153,21 +163,22 @@ export default class FortnitePage extends Component {
                 <option value="xb1">XBOX</option>
                 <option value="psn">PS4</option>
               </select> */}
-                <input
-                  type="text"
-                  name="username"
-                  id=""
-                  value={this.state.username}
-                  placeholder="Username"
-                  onChange={this.handleChange}
-                />
-                <button onClick={this.handleSubmission}>Search</button>
-                <div>
-                  <small className="text-danger">Person doesn't exist</small>
-                </div>
-              </label>
-            </fieldset>
-          </form>
+                  <input
+                    type="text"
+                    name="username"
+                    id=""
+                    value={this.state.username}
+                    placeholder="Username"
+                    onChange={this.handleChange}
+                  />
+                  <button onClick={this.handleSubmission}>Search</button>
+                  <div>
+                    <small className="text-danger">Person doesn't exist</small>
+                  </div>
+                </label>
+              </fieldset>
+            </form>
+          </div>
           <div>
             <p>Name: Invalid Username</p>
             {/* <p>First Place in Duo game mode:{this.state.players.global_stats.duo.placetop1}</p>  */}
@@ -178,7 +189,7 @@ export default class FortnitePage extends Component {
       );
     } else if (this.props.token) {
       return (
-        <div>
+        <div className="fortnitePage">
           <h1>Fortnite Page</h1>
           <form action="">
             <fieldset>
@@ -197,7 +208,7 @@ export default class FortnitePage extends Component {
                 <input
                   type="text"
                   name="username"
-                  id=""
+                  id="searchBar"
                   value={this.state.username}
                   placeholder="Username"
                   onChange={this.handleChange}
@@ -221,9 +232,9 @@ export default class FortnitePage extends Component {
           </div>
         </div>
       );
-    } else if (this.state.existingUser) {
+    } else if (this.state.existingUser && this.props.token) {
       return (
-        <div>
+        <div className="fortnitePage">
           <h1>Fortnite Page</h1>
           <form action="">
             <fieldset>
@@ -242,12 +253,12 @@ export default class FortnitePage extends Component {
                 <input
                   type="text"
                   name="username"
-                  id=""
+                  id="searchBar"
                   value={this.state.username}
                   placeholder="Username"
                   onChange={this.handleChange}
                 />
-                <small className="text-danger">User already exist</small>
+                <small className="text-danger">User is already a friend</small>
                 <button onClick={this.handleSubmission}>Search</button>
               </label>
             </fieldset>
@@ -269,12 +280,12 @@ export default class FortnitePage extends Component {
       );
     }
     return (
-      <div>
-        <h1>Fortnite Page</h1>
-        <form action="">
-          <fieldset>
-            <label htmlFor=" Username">
-              {/* <select
+      <div className="fortnitePage">
+          <h1>Fortnite Page</h1>
+          <form action="">
+            <fieldset>
+              <label htmlFor=" Username">
+                {/* <select
                 name="platform"
                 id=""
                 onChange={this.handleChange}
@@ -286,30 +297,32 @@ export default class FortnitePage extends Component {
                 <option value="psn">PS4</option>
               </select> */}
 
-              <input
-                className="form-control"
-                type="text"
-                name="username"
-                id=""
-                value={this.state.username}
-                placeholder="Username"
-                onChange={this.handleChange}
-              />
-              <button onClick={this.handleSubmission}>Search</button>
-            </label>
-          </fieldset>
-        </form>
-        <div>
-          <p>
-            Name:{" "}
-            <Link to={`/fortnite/stats/${this.state.username}`}>
-              {this.state.players.name}
-            </Link>
-          </p>
-          {/* <p>First Place in Duo game mode:{this.state.players.global_stats.duo.placetop1}</p>  */}
-          <p>Level:{this.state.players.account.level} </p>
-          <div>{/* <button onClick={this.saveFriend}>Save!</button> */}</div>
-        </div>
+                <input
+                  className="form-control"
+                  id = "searchBar"
+                  type="text"
+                  name="username"
+                  
+                  value={this.state.username}
+                  placeholder="Username"
+                  onChange={this.handleChange}
+                />
+                <button onClick={this.handleSubmission}>Search</button>
+              </label>
+            </fieldset>
+          </form>
+          <div>
+            <p>
+              Name:{" "}
+              <Link to={`/fortnite/stats/${this.state.username}`}>
+                {this.state.players.name}
+              </Link>
+            </p>
+            {/* <p>First Place in Duo game mode:{this.state.players.global_stats.duo.placetop1}</p>  */}
+            <p>Level:{this.state.players.account.level} </p>
+            <div>{/* <button onClick={this.saveFriend}>Save!</button> */}</div>
+          </div>
+      
       </div>
     );
   }

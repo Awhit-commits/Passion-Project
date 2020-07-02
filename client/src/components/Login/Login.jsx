@@ -39,7 +39,7 @@ export default class Login extends Component {
       return <Redirect to="/" />;
     }
     return (
-      <div>
+      <div className = "loginPage">
         <form action="">
           <div className="control-group">
             {/* <!-- E-mail --> */}
