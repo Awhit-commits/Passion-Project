@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
+import { store } from 'react-notifications-component';
 
 export default class Login extends Component {
   constructor(props) {
@@ -31,12 +32,29 @@ export default class Login extends Component {
     console.log(this.state);
     let json = await response.json();
     console.log(json);
+    if(json.error){
+      store.addNotification({
+        title: "Error!",
+        message: "User/Password is incorrect",
+        type: "warning",
+        insert: "top",
+        container: "top-right",
+        animationIn: ["animated", "fadeIn"],
+        animationOut: ["animated", "fadeOut"],
+        dismiss: {
+          duration: 2000,
+          onScreen: false
+        }
+      });
+      return (<Redirect to ="/login" />)
+
+    }
     this.setState({ redirect: true });
     this.props.getToken(json.token);
   };
   render() {
     if (this.state.redirect) {
-      return <Redirect to="/" />;
+      return <Redirect to="/fortnite/" />;
     }
     return (
       <div className = "loginPage">

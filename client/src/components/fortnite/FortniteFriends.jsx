@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { store } from 'react-notifications-component';
+
 
 export default class fortniteFriends extends Component {
   constructor(props) {
@@ -13,7 +15,7 @@ export default class fortniteFriends extends Component {
       firstSquad: "",
       sortKills: false,
       sortPlay: false,
-      sortWins:true
+      sortWins: true,
     };
   }
   //Lifecycle method to fetch user friends from the database to populate leaderboard
@@ -21,7 +23,12 @@ export default class fortniteFriends extends Component {
     let response = await fetch(`/users/profile/${this.props.id}`);
     let json = await response.json();
     console.log(json);
+    
+    json.fortniteFriends.forEach(friend=>{
+       let soloKills = parseInt(friend.firstPlaceSolo)
+    })
     this.setState({ friends: json.fortniteFriends });
+    
     console.log(this.state.friends);
     console.log(this.state);
 
@@ -47,7 +54,9 @@ export default class fortniteFriends extends Component {
       };
     }
 
-    console.log(this.state.friends.sort(compareValues("firstPlaceSolo", "desc")));
+    console.log(
+      this.state.friends.sort(compareValues("firstPlaceSolo", "desc"))
+    );
   }
 
   //Use live data instead of stored to to be more accurate when showing info under the friend name (TODO)
@@ -111,11 +120,7 @@ export default class fortniteFriends extends Component {
       });
     }
   };
-// componentDidUpdate(prevState){
-//   if(prevState.friends !== this.state.friends){
-//     this.setState({friends:this.state.friends})
-//   }
-// }
+ 
   //Deleting a friend from the array using the id index and splice method (TODO)
   removeFriend = async (id) => {
     this.state.friends.splice(
@@ -138,11 +143,24 @@ export default class fortniteFriends extends Component {
     let json = await response.json();
     console.log(json);
     // this.componentDidUpdate(json)
-    this.componentDidMount()
-    
+    store.addNotification({
+      title: "Wonderful!",
+      message: "Friend Removed",
+      type: "success",
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animated", "fadeIn"],
+      animationOut: ["animated", "fadeOut"],
+      dismiss: {
+        duration: 1000,
+        onScreen: false
+      }
+    });
+
+    this.componentDidMount();
   };
   sortKills = () => {
-    this.setState({sortKills:true,sortWins:false,sortPlay:false})
+    this.setState({ sortKills: true, sortWins: false, sortPlay: false });
     function compareValues(key, order = "asc") {
       return function innerSort(a, b) {
         if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
@@ -162,13 +180,37 @@ export default class fortniteFriends extends Component {
         }
         return order === "desc" ? comparison * -1 : comparison;
       };
-    
     }
-    this.state.friends.sort(compareValues('kills','desc'))
+    this.state.friends.sort(compareValues("killSolo", "desc"));
   };
 
-  sortWins = ()=>{
-    this.setState({sortKills:false,sortWins:true,sortPlay:false})
+  sortWins = () => {
+    this.setState({ sortKills: false, sortWins: true, sortPlay: false });
+    function dynamicsort(property, order) {
+      var sort_order = 1;
+      if (order === "desc") {
+        sort_order = -1;
+      }
+      return function (a, b) {
+        // a should come before b in the sorted order
+        if (a[property] < b[property]) {
+          return -1 * sort_order;
+          // a should come after b in the sorted order
+        } else if (a[property] > b[property]) {
+          return 1 * sort_order;
+          // a and b are the same
+        } else {
+          return 0 * sort_order;
+        }
+      };
+      
+    }
+    console.log(this.state.friends.sort(dynamicsort("firstPlaceSolo","asc")));
+    this.state.friends.sort(dynamicsort("firstPlaceSolo","desc"))
+  };
+
+  sortPlay = () => {
+    this.setState({ sortKills: false, sortWins: true, sortPlay: false });
     function compareValues(key, order = "asc") {
       return function innerSort(a, b) {
         if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
@@ -188,128 +230,116 @@ export default class fortniteFriends extends Component {
         }
         return order === "desc" ? comparison * -1 : comparison;
       };
-    
     }
-    this.state.friends.sort(compareValues('firstPlaceSolo','desc'))
-
-  }
-
-  sortPlay = ()=>{
-    this.setState({sortKills:false,sortWins:true,sortPlay:false})
-    function compareValues(key, order = "asc") {
-      return function innerSort(a, b) {
-        if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
-          // property doesn't exist on either object
-          return 0;
-        }
-        //ignoring casing and setting value of key parameter to a string
-        const varA = typeof a[key] === "string" ? a[key].toUpperCase() : a[key];
-        const varB = typeof b[key] === "string" ? b[key].toUpperCase() : b[key];
-
-        //if a > b, it will descend
-        let comparison = 0;
-        if (varA > varB) {
-          comparison = 1;
-        } else if (varA < varB) {
-          comparison = -1;
-        }
-        return order === "desc" ? comparison * -1 : comparison;
-      };
-    
-    }
-    this.state.friends.sort(compareValues('firstPlaceSolo','desc'))
-
-  }
+    this.state.friends.sort(compareValues("firstPlaceSolo", "desc"));
+  };
 
   render() {
-    if(this.state.sortKills){
-      return <div>
+    if (this.state.sortKills) {
+      return (
         <div>
-          <h4>Friend's List</h4>
-          {this.state.friends.map((friends) => {
-            if(this.props.psnName == friends.gamerTag){
-             return <Link to={`/fortnite/stats/${friends.gamerTag}`}>
-             <p>{friends.gamerTag } <b>(you)</b></p>
-           </Link>
-
-            }
-            return (
-              <div>
-                {" "}
-                <Link to={`/fortnite/stats/${friends.gamerTag}`}>
-                  <p>{friends.gamerTag}</p>
-                </Link>
-                <p>{friends.killSolo} Solo Kills</p>
-                <button onClick={() => this.removeFriend(friends._id)}>
-                  Remove
-                </button>
-              </div>
-            );
-          })}
           <div>
-            {" "}
-            {/* <button onClick={this.sortKills}>Sort by Kills</button> */}
-            <button onClick={this.sortWins}>Sort by Wins</button>
-          </div>
-        </div>
-      </div>
-
-    }
-    else if (this.state.sortWins){
-      return <div>
-      <div>
-        <h4>Friend's List</h4>
-        {this.state.friends.map((friends) => {
-          if(this.props.psnName == friends.gamerTag){
-            return (<Link to={`/fortnite/stats/${friends.gamerTag}`}>
-            <p>{friends.gamerTag } <b>(you)</b></p>
-          </Link>
-          // <div> <p>{friends.firstPlaceSolo} Solo Wins</p></div>)
-
-            )}
-          return (
+            <h4>Friend's List</h4>
+            <button className = "btn btn-primary" onClick={this.sortWins}>Sort by Wins</button>
+            {this.state.friends.map((friends) => {
+              if (this.props.psnName == friends.gamerTag) {
+                return (<div>
+                  <Link className = "text-dark" to={`/fortnite/stats/${friends.gamerTag}`}>
+                    <p>
+                      {friends.gamerTag} <b>(you)</b>
+                    </p>
+                  </Link>
+                  <p>{friends.killSolo} Total Kills</p>
+                  <button className = "btn btn-danger" onClick={() => this.removeFriend(friends._id)}>Remove</button></div>
+                );
+              }
+              return (
+                <div>
+                 
+                  {" "}
+                  <Link className = "text-dark" to={`/fortnite/stats/${friends.gamerTag}`}>
+                    <p>{friends.gamerTag}</p>
+                  </Link>
+                  <p>{friends.killSolo} Total Kills</p>
+                  <button className = "btn btn-danger" onClick={() => this.removeFriend(friends._id)}>
+                    Remove
+                  </button>
+                </div>
+              );
+            })}
             <div>
               {" "}
-              <Link to={`/fortnite/stats/${friends.gamerTag}`}>
-                <p>{friends.gamerTag}</p>
-              </Link>
-              <p>{friends.firstPlaceSolo} Solo Wins</p>
-              <button onClick={() => this.removeFriend(friends._id)}>
-                Remove
-              </button>
+              {/* <button onClick={this.sortKills}>Sort by Kills</button> */}
+              <button className = "btn btn-primary" onClick={this.sortWins}>Sort by Wins</button>
             </div>
-          );
-        })}
-        <div>
-          {" "}
-          <button onClick={this.sortKills}>Sort by Kills</button>
-          {/* <button onClick={this.sortPlay}>Sort by Playtime</button> */}
+          </div>
         </div>
-      </div>
-    </div>
-
-
+      );
+    } else if (this.state.sortWins) {
+      return (
+        <div>
+          <div>
+            <h4>Friend's List</h4>
+            <button className = "btn btn-primary" onClick={this.sortKills}>Sort by Kills</button>
+           
+            {this.state.friends.map((friends) => {
+              if (this.props.psnName == friends.gamerTag) {
+                return (<div>
+                  <Link className = "text-dark" to={`/fortnite/stats/${friends.gamerTag}`}>
+                    <p>
+                      {friends.gamerTag} <b>(you)</b>
+                    </p>
+                  </Link>
+                  <div> <p>{friends.firstPlaceSolo} Total Wins</p></div>
+                  <button className ="btn btn-danger" onClick={() => this.removeFriend(friends._id)}>Remove</button></div>
+                );
+              }
+              return (
+                <div>
+                  {" "}
+                  <Link className = "text-dark" to={`/fortnite/stats/${friends.gamerTag}`}>
+                    <p>{friends.gamerTag}</p>
+                  </Link>
+                  <p>{friends.firstPlaceSolo} Total Wins</p>
+                  <button className = "btn btn-danger" onClick={() => this.removeFriend(friends._id)}>
+                    Remove
+                  </button>
+                </div>
+              );
+            })}
+            <div>
+              {" "}
+              <button className = "btn btn-primary" onClick={this.sortKills}>Sort by Kills</button>
+              {/* <button onClick={this.sortPlay}>Sort by Playtime</button> */}
+            </div>
+          </div>
+        </div>
+      );
     }
     return (
       <div>
         <div>
           <h4>Friend's List</h4>
+          <button className = "btn btn-primary" onClick={this.sortWins}>Sort by Wins</button>
           {this.state.friends.map((friends) => {
-            if(this.props.psnName == friends.gamerTag){
-              return (<Link to={`/fortnite/stats/${friends.gamerTag}`}>
-              <p>{friends.gamerTag } <b>(you)</b></p>
-            </Link>
-            //  <p>{friends.firstPlaceSolo} Solo Wins</p>)
- 
-              )}
+            if (this.props.psnName == friends.gamerTag) {
+              return (<div>
+                <Link className = "text-dark" to={`/fortnite/stats/${friends.gamerTag}`}>
+                  <p>
+                    {friends.gamerTag} <b>(you)</b>
+                  </p>
+                </Link>
+                 <p>{friends.firstPlaceSolo} Total Wins</p></div>
+              );
+            }
             return (
               <div>
                 {" "}
-                <Link to={`/fortnite/stats/${friends.gamerTag}`}>
+                <Link className = "text-dark" to={`/fortnite/stats/${friends.gamerTag}`}>
                   <p>{friends.gamerTag}</p>
                 </Link>
-                <p>{friends.firstPlaceSolo} Solo Wins</p>
-                <button onClick={() => this.removeFriend(friends._id)}>
+                <p>{friends.firstPlaceSolo} Total Wins</p>
+                <button className = "btn btn-danger" onClick={() => this.removeFriend(friends._id)}>
                   Remove
                 </button>
               </div>
@@ -317,7 +347,7 @@ export default class fortniteFriends extends Component {
           })}
           <div>
             {" "}
-            <button onClick={this.sortKills}>Sort by Kills</button>
+            <button className = "btn btn-primary "onClick={this.sortKills}>Sort by Kills</button>
             {/* <button onClick={this.sortPlay}>Sort by Playtime</button> */}
           </div>
         </div>

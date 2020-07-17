@@ -10,13 +10,13 @@ router.get("/", function (req, res, next) {
 });
 
 //Creating a saved friend from fortnite page and relating it to the logged in user
-router.post("/fortnite/:_id", (req, res) => {
+router.put("/fortnite/:_id", (req, res) => {
   UserCollection.findOne({ _id: req.params._id }, req.body)
     .populate("fortniteFriends")
     .exec((error, results) => {
       error ? res.send(error) : console.log(results);
       let friendMap = results.fortniteFriends.find((friend) => {
-        if (req.body.gamerTag == friend.gamerTag||req.body._id == friend._id) {
+        if (req.body.gamerTag.toUpperCase() == friend.gamerTag.toUpperCase()) {
           // console.log(`User exist`);
         //  return  res.json({message:"User exist"})
         return true
@@ -39,11 +39,14 @@ router.post("/fortnite/:_id", (req, res) => {
         }
       });
       
-      console.log(friendMap);
+      // console.log(friendMap);
       if(friendMap){
         res.json({message:`User is already a friend`})
       }
       else{
+
+      let fortniteFriend,user;
+
         console.log(`Person does not exist`)
         // res.send('People does not exist')
         FriendCollection.create(req.body, (errors, results) => {
@@ -56,7 +59,7 @@ router.post("/fortnite/:_id", (req, res) => {
                 user.save();
                 res.send(user);
               }
-            ).populate("fortniteFriends");
+            );
           });
       }
     });

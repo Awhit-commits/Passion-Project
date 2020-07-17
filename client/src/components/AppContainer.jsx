@@ -72,7 +72,18 @@ export default class AppContainer extends Component {
           <NavBar id={this.state.id} token={this.state.token} />
           {/* Fortnite Routes */}
           <Route
-            path="/fortnite"
+           exact path="/fortnite"
+            exact
+            component={(props) => (
+              <FortnitePage
+                {...props}
+                token={this.state.token}
+                id={this.state.id}
+              />
+            )}
+          ></Route>
+          <Route
+           exact path="/"
             exact
             component={(props) => (
               <FortnitePage
@@ -85,7 +96,7 @@ export default class AppContainer extends Component {
           <Route
             path="/fortnite/stats/:id"
             exact
-            component={(props) => <StatsPageFortnite {...props} />}
+            component={(props) => <StatsPageFortnite {...props} userID = {this.state.id} token = {this.state.token} />}
           ></Route>
 
           {/* Apex Routes */}
@@ -124,6 +135,7 @@ export default class AppContainer extends Component {
           {/* <Link to = {`/profile/${this.state.id}`}><p>My Profile</p></Link> */}
 
           {/* </div> */}
+          {/* <FortnitePage/> */}
         </Router>
       </div>
     );

@@ -3,16 +3,16 @@ const mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 let FriendsSchema = new Schema({
   timePlayed: String,
-  gamerTag:{type:String,unique:true},
+  gamerTag:String,
   kdRatioSolo:String,
   kdRatioDuo:String,
   kdRatioSquad:String,
-  firstPlaceSolo:String,
-  firstPlaceDuo:String,
-  firstPlaceSquads:String,
-  killSolo:String,
-  killDuo:String,
-  killSquad:String,
+  firstPlaceSolo:Number,
+  firstPlaceDuo:Number,
+  firstPlaceSquads:Number,
+  killSolo:Number,
+  killDuo:Number,
+  killSquad:Number,
 
   matchesPlayed:String,
   level:String

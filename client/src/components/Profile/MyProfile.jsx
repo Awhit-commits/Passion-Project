@@ -32,9 +32,10 @@ export default class myProfile extends Component {
                 </p>
                 <p>Steam Name:{this.state.user.steamName}</p>
                 <p>Xbox Live Name:{this.state.user.xLiveName}</p>
+                <Link to ={`/profile/edit/${this.props.id}`}>Edit Profile</Link>
                 </div>
                 <div>
-                    <Link to ={`/profile/edit/${this.props.id}`}>Edit Profile</Link>
+                    {/* <Link to ={`/profile/edit/${this.props.id}`}>Edit Profile</Link> */}
                 </div>
                 <div className = "fortniteFriends">
                 <FortniteFriends xLiveName = {this.state.user.xLiveName} steamName = {this.state.user.steamName} psnName = {this.state.user.psnName} id = {this.props.id}/>

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
+import { store } from 'react-notifications-component';
 
 export default class Register extends Component {
   constructor(props) {
@@ -21,7 +22,19 @@ handleChange = (event)=>{
 handleSubmission = async (event)=>{
     event.preventDefault();
     if(this.state.password != this.state.password_confirm){
-        window.alert(`The passwords do not match`)
+      store.addNotification({
+        title: "Error!",
+        message: "Passwords do not match",
+        type: "warning",
+        insert: "top",
+        container: "top-right",
+        animationIn: ["animated", "fadeIn"],
+        animationOut: ["animated", "fadeOut"],
+        dismiss: {
+          duration: 2000,
+          onScreen: false
+        }
+      });
     }
     else{
         let newUser= {
@@ -53,7 +66,7 @@ handleSubmission = async (event)=>{
       return <Redirect to = "/login"/>
     }
     return (
-      <div>
+      <div className =" registrationPage">
         <form className="form-horizontal" action="" method="">
           <fieldset>
             <div id="legend">

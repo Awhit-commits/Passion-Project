@@ -91,7 +91,7 @@
 
 #searchBar{
  position: absolute;
- top: 50%;
+ top: 30%;
  left: 25%;
  text-align: center;
  width: 50%;
@@ -100,7 +100,60 @@
 }
 
 .loginPage{
-  position: absolute;
-  top: 50%;
+  position: relative;
+  top: 50px;
+  
+  left: 45%;
+  background-color: #eeeeee;
+}
+
+.registrationPage{
+  position: relative;
+  top: 20px;
   left: 45%;
 }
+.searchButton{
+  position: absolute;
+  left:76%;
+  top: 30%;
+}
+.profileName{
+  text-align: center;
+}
+body{
+  background-color: #eeeeee;
+  color: #6C6C6C;
+}
+.searchContainer{
+  /* border: #282c34 solid; */
+  
+}
+.resultsContainer{
+  position: absolute;
+  top: 40%;
+  left: 45%
+}
+
+.fortnitePage h1{
+  text-align: center;
+}
+
+.competitionTag{
+  text-align: center;
+}
+.bg {
+  background-image: url("https://mdbootstrap.com/img/Photos/Horizontal/Nature/full page/img(20).jpg");
+  height: 100vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  }
+  .saveStatsBtn{
+    position: relative;
+    left: 45%;
+    /* top: 50%; */
+
+  
+  }
+
+  
