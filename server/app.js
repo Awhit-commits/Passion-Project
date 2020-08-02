@@ -30,6 +30,15 @@ mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true, useF
 let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
+//When build is in production environment 
+if (process.env.NODE_ENV === 'production') {           
+  app.use(express.static('../client/build'));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  });
+}
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
