@@ -5,9 +5,9 @@ const FriendCollection = require("../models/FriendsSchema");
 // const FriendsSchema = require('../models/FriendsSchema');
 
 /* GET home page. */
-router.get("/", function (req, res, next) {
-  res.render("index", { title: "Express" });
-});
+// router.get("/", function (req, res, next) {
+//   res.render("index", { title: "Express" });
+// });
 
 //Creating a saved friend from fortnite page and relating it to the logged in user
 router.put("/fortnite/:_id", (req, res) => {
